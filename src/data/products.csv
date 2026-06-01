@@ -1,0 +1,21 @@
+product_id,name,category,price_usd,stock_qty,tax_rate,shipping_weight_kg,coupon_code
+P001,Wireless Earbuds,Electronics,49.99,120,0.10,0.05,SUMMER10
+P002,Smartphone Stand,Accessories,15.50,240,0.08,0.12,STAND5
+P003,USB-C Fast Charger,Electronics,24.99,180,0.10,0.08,CHARGE5
+P004,Travel Backpack,Travel,69.99,75,0.12,0.75,BACKPACK15
+P005,Stainless Steel Water Bottle,Home,22.00,210,0.08,0.35,BOTTLE5
+P006,LED Desk Lamp,Home,34.50,95,0.08,1.10,LAMP10
+P007,Noise-Cancelling Headphones,Electronics,129.90,45,0.10,0.30,HEAD20
+P008,Yoga Mat,Fitness,29.99,160,0.08,1.20,YOGA5
+P009,Wireless Mouse,Electronics,19.99,200,0.10,0.10,MOUSE3
+P010,Portable Bluetooth Speaker,Electronics,58.00,90,0.10,0.40,SPEAKER10
+P011,Cotton T-Shirt,Fashion,18.00,320,0.12,0.20,TSHIRT15
+P012,Running Shoes,Fashion,89.99,65,0.12,0.90,SHOES20
+P013,Smartwatch Band,Accessories,12.50,150,0.08,0.05,BAND5
+P014,Kitchen Knife Set,Home,79.99,55,0.08,1.50,KNIFE10
+P015,Bamboo Cutting Board,Home,25.00,130,0.08,0.80,BOARD5
+P016,Organic Face Cream,Beauty,32.00,100,0.10,0.15,CREAM10
+P017,Kids Puzzle Toy,Toys,16.99,140,0.08,0.25,PUZZLE5
+P018,Electric Kettle,Home,44.99,70,0.08,1.20,KETTLE10
+P019,Gaming Keyboard,Electronics,74.99,60,0.10,0.80,KEYBOARD15
+P020,Pet Grooming Brush,Pet,14.99,130,0.08,0.10,PETBRUSH5
