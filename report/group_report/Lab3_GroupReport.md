@@ -2,7 +2,7 @@
 
 - **Tên Nhóm**: Day-3-Lab-Chatbot-vs-react-agent
 - **Thành Viên Nhóm**:
-  - Thành viên A: [Trưởng Môi Trường/Dữ Liệu]
+  - Thành viên A: [Trưởng Môi Trường/Dữ Liệu]: [Lê Văn Quang - 2A202600554]
   - Thành viên B (Trưởng Tools): [Nguyễn Hải An - 2A202600920]
   - Thành viên C: [Trưởng Baseline/Tests]
   - Thành viên D: [Trưởng Agent ReAct]
