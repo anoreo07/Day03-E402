@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MiniMart AI Shopping Assistant</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="assistant-rail">
+      <div class="brand">
+        <div class="brand-mark">M</div>
+        <div>
+          <p class="brand-name">MiniMart AI</p>
+          <p class="brand-subtitle">Personal shopper</p>
+        </div>
+      </div>
+
+      <div class="assistant-status">
+        <span class="pulse"></span>
+        <span>Assistant online</span>
+      </div>
+
+      <nav class="rail-nav" aria-label="Shopping assistant sections">
+        <a href="#assistant" class="rail-link active">Chat tư vấn</a>
+        <a href="#recommendations" class="rail-link">Gợi ý sản phẩm</a>
+        <a href="#cart" class="rail-link">Giỏ hàng</a>
+        <a href="#checkout-card" class="rail-link">Đặt hàng</a>
+      </nav>
+
+      <div class="deal-card">
+        <p class="eyebrow">Deal desk</p>
+        <h2>Gợi ý nhanh theo nhu cầu</h2>
+        <p>Hỏi trợ lý để lọc sản phẩm, kiểm tra tồn kho, áp coupon và tạo đơn hàng giả lập.</p>
+      </div>
+    </aside>
+
+    <main class="main-stage">
+      <section class="hero-strip">
+        <div>
+          <p class="eyebrow">E-commerce shopping assistant</p>
+          <h1>Trợ lý mua hàng cá nhân cho MiniMart</h1>
+          <p class="hero-copy">Chat để được tư vấn, xem gợi ý phù hợp, thêm sản phẩm vào giỏ và hoàn tất đặt hàng giả lập trong một luồng duy nhất.</p>
+        </div>
+        <div class="hero-metrics" aria-label="Assistant capabilities">
+          <div><strong>20</strong><span>Sản phẩm</span></div>
+          <div><strong>Coupon</strong><span>Tự động gợi ý</span></div>
+          <div><strong>Mock</strong><span>Checkout</span></div>
+        </div>
+      </section>
+
+      <section class="assistant-layout">
+        <div class="chat-panel" id="assistant">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">AI Shopping Chat</p>
+              <h2>Hỏi trợ lý mua hàng</h2>
+            </div>
+            <span class="support-badge">Live demo</span>
+          </div>
+
+          <div class="quick-prompts" aria-label="Quick prompts">
+            <button data-prompt="Gợi ý sản phẩm electronics đang còn hàng">Electronics</button>
+            <button data-prompt="Tìm deal tốt nhất dưới 50 đô">Deal dưới $50</button>
+            <button data-prompt="Mã giảm giá nào đáng dùng hôm nay?">Coupon tốt</button>
+            <button data-prompt="Tôi muốn đặt hàng giả lập, hướng dẫn tôi">Đặt hàng</button>
+          </div>
+
+          <div class="chat-window" id="chat-window">
+            <div class="message bot">
+              <span class="message-label">MiniMart AI</span>
+              Xin chào! Mình có thể tư vấn sản phẩm, kiểm tra tồn kho, gợi ý coupon và giúp bạn tạo đơn hàng giả lập.
+            </div>
+          </div>
+
+          <div class="chat-input-row">
+            <input id="assistant-input" placeholder="Ví dụ: Tư vấn tai nghe chống ồn còn hàng và có mã giảm giá" />
+            <button id="assistant-send" class="btn primary">Gửi</button>
+          </div>
+        </div>
+
+        <aside class="shopping-desk">
+          <div class="desk-card recommendation-card" id="recommendations">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Recommended</p>
+                <h2>Gợi ý dành cho bạn</h2>
+              </div>
+            </div>
+            <div id="recommended-products" class="recommended-products"></div>
+          </div>
+
+          <div class="desk-card cart-card" id="cart">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Shopping cart</p>
+                <h2>Giỏ hàng</h2>
+              </div>
+              <span id="cart-count" class="cart-count">0 món</span>
+            </div>
+            <div id="cart-items" class="cart-items"></div>
+            <div class="coupon-row">
+              <input id="coupon" placeholder="Nhập coupon" />
+              <button id="apply-coupon" class="btn secondary">Áp mã</button>
+            </div>
+          </div>
+
+          <div class="desk-card checkout-card" id="checkout-card">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Order summary</p>
+                <h2>Tạm tính đơn hàng</h2>
+              </div>
+            </div>
+            <div class="summary">
+              <div class="summary-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+              <div class="summary-row"><span>Phí ship</span><span id="shipping">$0.00</span></div>
+              <div class="summary-row"><span>Thuế</span><span id="tax">$0.00</span></div>
+              <div class="summary-row"><span>Giảm giá</span><span id="discount">$0.00</span></div>
+              <div class="summary-row total"><span>Tổng thanh toán</span><span id="total">$0.00</span></div>
+            </div>
+            <div class="order-steps">
+              <span class="step active">Tư vấn</span>
+              <span class="step" id="step-cart">Thêm giỏ</span>
+              <span class="step" id="step-coupon">Áp mã</span>
+              <span class="step" id="step-order">Đặt hàng</span>
+            </div>
+            <button id="checkout" class="btn checkout">Đặt hàng giả lập</button>
+          </div>
+        </aside>
+      </section>
+
+      <section class="catalog-section">
+        <div class="catalog-header">
+          <div>
+            <p class="eyebrow">Product catalog</p>
+            <h2>Sản phẩm có thể tư vấn</h2>
+          </div>
+          <div class="search-row">
+            <input id="search" placeholder="Tìm tên sản phẩm hoặc danh mục" />
+          </div>
+        </div>
+        <div id="products" class="products"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="order-modal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="order-title">
+      <button id="close-modal" class="modal-close" aria-label="Đóng">×</button>
+      <p class="eyebrow">Mock order created</p>
+      <h2 id="order-title">Đặt hàng giả lập thành công</h2>
+      <p id="order-message">MiniMart AI đã tạo đơn hàng demo cho giỏ hàng của bạn.</p>
+      <div id="order-receipt" class="order-receipt"></div>
+      <button id="continue-shopping" class="btn primary">Tiếp tục mua hàng</button>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
