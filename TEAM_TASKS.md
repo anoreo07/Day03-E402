@@ -7,11 +7,11 @@ Tài liệu này phân chia công việc rõ ràng cho đội 5 người dựa t
 - Mục tiêu: Triển khai chatbot baseline và Agent ReAct (v1 → v2), có telemetry (logs JSON), chạy test cases, và nộp báo cáo nhóm + cá nhân.
 
 ## Danh sách thành viên
-- Thành viên A: [Tên A]
-- Thành viên B: [Tên B]
-- Thành viên C: [Tên C]
-- Thành viên D: [Tên D]
-- Thành viên E: [Tên E]
+- Thành viên A: Quang
+- Thành viên B: An
+- Thành viên C: Linh
+- Thành viên D: Đức
+- Thành viên E: Bút
 
 ---
 

@@ -1,45 +1,117 @@
-import logging
+"""Structured JSON logger for the AI Lab Agent.
+
+Produces **one JSON object per line** (JSONL) in ``logs/YYYY-MM-DD.log``.
+Each log entry contains:
+    - ``timestamp`` (ISO-8601 UTC)
+    - ``event`` (event type string)
+    - ``data`` (arbitrary dict payload)
+
+The module exposes a singleton ``logger`` instance used throughout the
+codebase. Handler deduplication is enforced so that repeated imports or
+re-instantiation never produce duplicate log lines.
+
+Usage::
+
+    from src.telemetry.logger import logger
+    logger.log_event("MY_EVENT", {"key": "value"})
+"""
+
 import json
+import logging
 import os
-from datetime import datetime
-from typing import Any, Dict
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 
 class IndustryLogger:
-    """
-    Structured logger that simulates industry practices.
-    Logs to both console and a file in JSON format.
-    """
-    def __init__(self, name: str = "AI-Lab-Agent", log_dir: str = "logs"):
-        self.logger = logging.getLogger(name)
-        self.logger.setLevel(logging.INFO)
-        
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
+    """Structured logger that simulates industry practices.
 
-        # File Handler (JSON)
-        log_file = os.path.join(log_dir, f"{datetime.now().strftime('%Y-%m-%d')}.log")
-        file_handler = logging.FileHandler(log_file)
-        
-        # Console Handler
-        console_handler = logging.StreamHandler()
-        
+    Logs to both console and a file in JSONL format.
+    Guards against duplicate handlers when re-instantiated.
+    """
+
+    _instances: Dict[str, "IndustryLogger"] = {}
+
+    def __new__(cls, name: str = "AI-Lab-Agent", log_dir: str = "logs"):
+        """Singleton per *name* to prevent handler duplication."""
+        if name in cls._instances:
+            return cls._instances[name]
+        instance = super().__new__(cls)
+        cls._instances[name] = instance
+        return instance
+
+    def __init__(self, name: str = "AI-Lab-Agent", log_dir: str = "logs"):
+        if hasattr(self, "_initialised"):
+            return
+        self._initialised = True
+        self.log_dir = log_dir
+        self.logger = logging.getLogger(name)
+        self.logger.setLevel(logging.DEBUG)
+        self.logger.propagate = False
+
+        os.makedirs(log_dir, exist_ok=True)
+
+        # ── File handler (JSONL) ──────────────────────────────────────
+        log_file = os.path.join(
+            log_dir, f"{datetime.now().strftime('%Y-%m-%d')}.log"
+        )
+        file_handler = logging.FileHandler(log_file, encoding="utf-8")
+        file_handler.setLevel(logging.INFO)
         self.logger.addHandler(file_handler)
+
+        # ── Console handler ───────────────────────────────────────────
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.INFO)
         self.logger.addHandler(console_handler)
 
-    def log_event(self, event_type: str, data: Dict[str, Any]):
-        """Logs an event with a timestamp and type."""
-        payload = {
-            "timestamp": datetime.utcnow().isoformat(),
-            "event": event_type,
-            "data": data
-        }
-        self.logger.info(json.dumps(payload))
+    # ── Public API ────────────────────────────────────────────────────
 
-    def info(self, msg: str):
+    def log_event(self, event_type: str, data: Dict[str, Any]) -> None:
+        """Log a structured event as a single JSON line."""
+        payload = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "event": event_type,
+            "data": data,
+        }
+        self.logger.info(json.dumps(payload, ensure_ascii=False))
+
+    def log_step(
+        self,
+        step: int,
+        thought: Optional[str],
+        action: Optional[Dict[str, Any]],
+        observation: Optional[str],
+        tokens: Optional[Dict[str, int]] = None,
+        duration_ms: Optional[int] = None,
+    ) -> None:
+        """Convenience method to log a full agent step in one call.
+
+        Fields match the lab requirements:
+        timestamp, step, thought, action, observation, tokens, duration.
+        """
+        self.log_event(
+            "AGENT_STEP_DETAIL",
+            {
+                "step": step,
+                "thought": thought,
+                "action": action,
+                "observation": observation,
+                "tokens": tokens or {},
+                "duration_ms": duration_ms or 0,
+            },
+        )
+
+    def info(self, msg: str) -> None:
         self.logger.info(msg)
 
-    def error(self, msg: str, exc_info=True):
+    def error(self, msg: str, exc_info: bool = True) -> None:
         self.logger.error(msg, exc_info=exc_info)
+
+    def flush(self) -> None:
+        """Flush all handlers."""
+        for handler in self.logger.handlers:
+            handler.flush()
+
 
 # Global logger instance
 logger = IndustryLogger()
