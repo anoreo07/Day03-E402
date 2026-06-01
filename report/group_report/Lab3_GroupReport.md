@@ -1,12 +1,12 @@
 # Báo Cáo Nhóm: Lab 3 - So Sánh Chatbot vs Agent ReAct (Hệ Thống Agent Cấp Công Nghiệp)
 
-- **Tên Nhóm**: Day-3-Lab-Chatbot-vs-react-agent
+- **Tên Nhóm**: Nhóm 4- E402
 - **Thành Viên Nhóm**:
-  - Thành viên A: [Trưởng Môi Trường/Dữ Liệu]: [Lê Văn Quang - 2A202600554]
-  - Thành viên B (Trưởng Tools): [Nguyễn Hải An - 2A202600920]
-  - Thành viên C: [Trưởng Baseline/Tests]
-  - Thành viên D: [Trưởng Agent ReAct]
-  - Thành viên E: [Trưởng Telemetry & Reporting] : [Lương Đình Bút]
+  - Thành viên 1: [Trưởng Môi Trường/Dữ Liệu]: [Lê Văn Quang - 2A202600554]
+  - Thành viên 2 (Trưởng Tools): [Nguyễn Hải An - 2A202600920]
+  - Thành viên 3: [Trưởng Baseline/Tests]: [Đoàn Thị Thu Linh - 2A202600964]
+  - Thành viên 4: [Trưởng Agent ReAct]
+  - Thành viên 5: [Trưởng Telemetry & Reporting] : [Lương Đình Bút]
 - **Repository**: https://github.com/anoreo07/Day-3-Lab-Chatbot-vs-react-agent
 - **Ngày Triển Khai**: 2026-06-01
 
@@ -171,6 +171,23 @@ Sau khi tối ưu hóa, agent trả lời đúng: *"Tôi không nhận ra mã co
 **Kết Luận**: Định dạng action JSON-first với hướng dẫn guardrail rõ ràng cải thiện đáng kể độ tin cậy.
 
 ### Thí Nghiệm 2: Chatbot vs Agent Trong Truy Vấn Đa Bước
+Để đánh giá khả năng xử lý truy vấn thương mại điện tử của chatbot baseline, hệ thống được kiểm thử với 10 test cases bao gồm 5 bài toán đơn bước và 5 bài toán đa bước.
+
+#### Single-Step Test Cases
+
+1. Kiểm tra tồn kho sản phẩm.
+2. Truy vấn giá sản phẩm.
+3. Kiểm tra và áp dụng mã giảm giá.
+4. Tính phí vận chuyển sản phẩm.
+5. Hiển thị danh sách sản phẩm.
+
+#### Multi-Step Test Cases
+
+6. Tính tổng đơn hàng có áp dụng mã giảm giá.
+7. Tính tổng đơn hàng không sử dụng mã giảm giá.
+8. Xử lý trường hợp sản phẩm hết hàng.
+9. Tính thuế sau khi áp dụng giảm giá.
+10. Tính phí vận chuyển theo số lượng/trọng lượng sản phẩm.
 
 | Loại Truy Vấn | Độ Chính Xác Chatbot | Độ Chính Xác Agent | Người Thắng |
 | :--- | :--- | :--- | :--- |
@@ -249,11 +266,11 @@ Sau khi tối ưu hóa, agent trả lời đúng: *"Tôi không nhận ra mã co
 
 | Thành Viên | Vai Trò | Các Thành Phẩm | Trạng Thái |
 | :--- | :--- | :--- | :--- |
-| Thành viên A | Trưởng Env/Data | Cài đặt `.env`, dữ liệu mẫu `products.csv`, README | ✅ Hoàn Thành |
-| Thành viên B | Trưởng Tools | 5 triển khai công cụ (`check_stock`, `get_price`, `get_discount`, `calc_shipping`, `calc_tax`), docstrings | ✅ Hoàn Thành |
-| Thành viên C | Trưởng Baseline | Chatbot cơ bản, 10 trường hợp thử nghiệm, báo cáo thử nghiệm | ✅ Hoàn Thành |
-| Thành viên D | Trưởng Agent | Agent ReAct v2, chuyển đổi provider, bản demo đa bước | ✅ Hoàn Thành |
-| Thành viên E | Trưởng Telemetry | Đường ống telemetry JSON, script metrics, báo cáo nhóm + cá nhân | ✅ Hoàn Thành |
+| Thành viên 1 | Trưởng Env/Data | Cài đặt `.env`, dữ liệu mẫu `products.csv`, README | ✅ Hoàn Thành |
+| Thành viên 2 | Trưởng Tools | 5 triển khai công cụ (`check_stock`, `get_price`, `get_discount`, `calc_shipping`, `calc_tax`), docstrings | ✅ Hoàn Thành |
+| Thành viên 3 | Trưởng Baseline | Chatbot cơ bản, 10 trường hợp thử nghiệm, báo cáo thử nghiệm | ✅ Hoàn Thành |
+| Thành viên 4 | Trưởng Agent | Agent ReAct v2, chuyển đổi provider, bản demo đa bước | ✅ Hoàn Thành |
+| Thành viên 5 | Trưởng Telemetry | Đường ống telemetry JSON, script metrics, báo cáo nhóm + cá nhân | ✅ Hoàn Thành |
 
 Tất cả các thành viên đã cam kết với kho lưu trữ công khai: https://github.com/anoreo07/Day-3-Lab-Chatbot-vs-react-agent
 
@@ -363,7 +380,7 @@ Day-3-Lab-Chatbot-vs-react-agent/
 ## 11. Chứng Thực
 
 **Được Xem Xét & Phê Duyệt Bởi**:
-- Trưởng Nhóm: [Tên Trưởng]
+- Nhóm: 4- E402
 - Ngày: 2026-06-01
 - Tất cả thành viên đã xác nhận: 1+ cam kết trong kho lưu trữ ✅
 
