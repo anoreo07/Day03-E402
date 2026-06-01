@@ -1,9 +1,12 @@
 import os
 import sys
+import pytest
 from dotenv import load_dotenv
 
 # Add src to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+pytest.importorskip("llama_cpp")
 
 from src.core.local_provider import LocalProvider
 

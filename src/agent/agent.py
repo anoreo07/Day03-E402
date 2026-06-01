@@ -31,6 +31,7 @@ import re
 from typing import List, Dict, Any, Optional, Tuple
 from src.core.llm_provider import LLMProvider
 from src.telemetry.logger import logger
+from src.telemetry.metrics import tracker
 
 class ReActAgent:
     """
@@ -118,36 +119,17 @@ Rules:
 
         Args:
             user_input: The user's shopping question.
-
-        Returns:
-            The final answer string, or a guard/failure message if the loop
-            cannot safely finish.
-
-        ReAct role:
-            Mỗi vòng gọi LLM một lần, parse Action, chạy tool, rồi đưa
-            Observation trở lại transcript. Đây là điểm khác biệt lớn với
-            chatbot thường: câu trả lời được xây từ dữ liệu tool thay vì đoán.
         """
-        self.history = []
-        logger.log_event(
-            "AGENT_START",
-            {
-                "input": user_input,
-                "model": self.llm.model_name,
-                "version": self.agent_version,
-                "max_steps": self.max_steps,
-            },
-        )
+        logger.log_event("AGENT_START", {"input": user_input, "model": self.llm.model_name})
+        self.history = [f"User: {user_input}"]
 
-        transcript = f"User: {user_input}"
-        repeated_actions: Dict[str, int] = {}
-        parse_failures: Dict[str, int] = {}
+        steps = 0
+        final_answer = None
 
-        for step in range(1, self.max_steps + 1):
-            # Mỗi step gửi toàn bộ transcript hiện tại để model thấy được
-            # các Observation trước đó và không phải tự tưởng tượng dữ liệu.
-            result = self.llm.generate(transcript, system_prompt=self.get_system_prompt())
-            response_text = (result.get("content") or "").strip()
+        while steps < self.max_steps:
+            prompt = "\n".join(self.history)
+            result = self.llm.generate(prompt, system_prompt=self.get_system_prompt())
+            content = result.get("content", "")
 
             tracker.track_request(
                 provider=result.get("provider", "unknown"),
@@ -156,151 +138,63 @@ Rules:
                 latency_ms=result.get("latency_ms", 0),
             )
 
-            thought = self._extract_thought(response_text)
-            logger.log_event(
-                "LLM_RESPONSE",
-                {
-                    "step": step,
-                    "thought": thought,
-                    "response": response_text,
-                    "latency_ms": result.get("latency_ms", 0),
-                    "usage": result.get("usage", {}),
-                },
-            )
+            thought, action = self._parse_thought_action(content)
+            final_answer = self._parse_final_answer(content)
 
-            if self.verbose:
-                print(f"\n===== STEP {step} =====")
-                print(response_text)
-
-            # Final Answer phải thắng Action. Nếu model đã giải xong rồi
-            # nhưng lỡ sinh thêm Action, agent vẫn nên dừng đúng lúc.
-            final_answer = self._extract_final_answer(response_text)
-            if final_answer:
-                logger.log_event(
-                    "AGENT_END",
-                    {
-                        "status": "success",
-                        "steps": step,
-                        "answer": final_answer,
-                        "termination": "final_answer",
-                    },
-                )
-                return final_answer
-
-            action, parse_error = self._parse_action(response_text)
-
-            if action is None:
-                # Local models hay lệch format; parse guard giúp lỗi rõ ràng
-                # thay vì đốt hết max_steps trong im lặng.
-                parse_key = parse_error or "unknown parse error"
-                parse_failures[parse_key] = parse_failures.get(parse_key, 0) + 1
-                observation = (
-                    f"ERROR[PARSE_ERROR step={step} repeat={parse_failures[parse_key]}]: "
-                    "Malformed model output. Expected exactly one of "
-                    'Final Answer: ... or Action: {"tool": "...", "args": {...}}. '
-                    f"{parse_error or ''}".strip()
-                )
-                logger.log_event(
-                    "PARSE_ERROR",
-                    {
-                        "step": step,
-                        "response": response_text,
-                        "error": parse_error,
-                        "repeat_count": parse_failures[parse_key],
-                    },
-                )
-                if parse_failures[parse_key] >= 3:
-                    answer = (
-                        "I could not continue because the model repeatedly produced "
-                        "malformed ReAct output."
-                    )
-                    logger.log_event(
-                        "PARSE_GUARD",
-                        {"step": step, "error": parse_error, "answer": answer},
-                    )
-                    logger.log_event(
-                        "AGENT_END",
-                        {"status": "parse_guard", "steps": step, "answer": answer},
-                    )
-                    return answer
-                transcript = self._append_observation(
-                    transcript, response_text, observation
-                )
-                continue
-
-            # Loop guard dùng fingerprint đã chuẩn hóa để bắt các action
-            # tương đương về mặt tool, kể cả khi model thêm arg không dùng.
-            action_key = self._action_fingerprint(action)
-            repeated_actions[action_key] = repeated_actions.get(action_key, 0) + 1
-            if repeated_actions[action_key] > 2:
-                answer = (
-                    "I could not make progress because the same tool call was "
-                    "repeated. Please rephrase the request or check the tool output."
-                )
-                logger.log_event(
-                    "LOOP_GUARD",
-                    {"step": step, "action": action, "answer": answer},
-                )
-                logger.log_event(
-                    "AGENT_END",
-                    {"status": "loop_guard", "steps": step, "answer": answer},
-                )
-                return answer
-
-            observation = self._execute_tool(action["tool"], action.get("args", {}))
-            self.history.append(
-                {
-                    "step": step,
-                    "thought": thought,
-                    "action": action,
-                    "observation": observation,
-                }
-            )
             logger.log_event(
                 "AGENT_STEP",
                 {
-                    "step": step,
+                    "step": steps + 1,
                     "thought": thought,
                     "action": action,
-                    "observation": observation,
+                    "model": self.llm.model_name,
+                    "usage": result.get("usage", {}),
+                    "latency_ms": result.get("latency_ms", 0),
                 },
             )
-            # Completion detector là "lưới an toàn" cho local model: nếu dữ
-            # liệu cần thiết đã có đủ, agent có thể kết thúc thay vì chờ LLM
-            # tự nói Final Answer ở bước kế tiếp.
-            completion_answer = self._maybe_complete_task(user_input)
-            if completion_answer:
-                logger.log_event(
-                    "COMPLETION_DETECTED",
-                    {
-                        "step": step,
-                        "answer": completion_answer,
-                    },
-                )
-                logger.log_event(
-                    "AGENT_END",
-                    {
-                        "status": "success",
-                        "steps": step,
-                        "answer": completion_answer,
-                        "termination": "completion_detector",
-                    },
-                )
-                return completion_answer
-            # Sau mỗi tool call, Observation được đưa lại vào transcript
-            # để LLM tiếp tục suy luận dựa trên dữ liệu thật.
-            transcript = self._append_observation(transcript, response_text, observation)
 
-        answer = "Max steps reached without Final Answer."
-        logger.log_event(
-            "MAX_STEPS",
-            {"max_steps": self.max_steps, "history": self.history},
-        )
-        logger.log_event(
-            "AGENT_END",
-            {"status": "max_steps", "steps": self.max_steps, "answer": answer},
-        )
-        return answer
+            if final_answer:
+                self.history.append(content.strip())
+                logger.log_event("AGENT_FINAL", {"answer": final_answer})
+                break
+
+            if action:
+                tool_name, args = action
+                observation = self._execute_tool(tool_name, args)
+                logger.log_event(
+                    "AGENT_TOOL",
+                    {"tool": tool_name, "args": args, "observation": observation},
+                )
+                logger.log_event(
+                    "AGENT_TRACE",
+                    {
+                        "thought": thought,
+                        "action": f"{tool_name}({args})",
+                        "observation": observation,
+                        "usage": result.get("usage", {}),
+                        "latency_ms": result.get("latency_ms", 0),
+                    },
+                )
+                self.history.append(content.strip())
+                self.history.append(f"Observation: {observation}")
+            else:
+                logger.log_event(
+                    "AGENT_TRACE",
+                    {
+                        "thought": thought,
+                        "action": None,
+                        "observation": "No action parsed.",
+                        "usage": result.get("usage", {}),
+                        "latency_ms": result.get("latency_ms", 0),
+                    },
+                )
+                self.history.append(content.strip())
+                self.history.append("Observation: No action parsed.")
+
+            steps += 1
+
+        logger.log_event("AGENT_END", {"steps": steps, "final": bool(final_answer)})
+        return final_answer or "I could not complete the request within the step limit."
 
     # =========================================================================
     # Tool Execution

@@ -46,3 +46,8 @@ def build_provider_from_env(
     raise ValueError(
         "Unsupported provider. Use DEFAULT_PROVIDER=openai, gemini, local."
     )
+
+
+def build_provider(provider: Optional[str] = None, model: Optional[str] = None) -> LLMProvider:
+    """Build an LLMProvider using the same semantics as build_provider_from_env."""
+    return build_provider_from_env(provider_name=provider, model_name=model)

@@ -1,8 +1,12 @@
 import time
 import os
 from typing import Dict, Any, Optional, Generator
-import llama_cpp
-from llama_cpp import Llama
+
+try:
+    from llama_cpp import Llama
+except Exception as exc:
+    Llama = None
+    _LLAMA_IMPORT_ERROR = exc
 from src.core.llm_provider import LLMProvider
 
 class LocalProvider(LLMProvider):
@@ -26,6 +30,12 @@ class LocalProvider(LLMProvider):
         """
         super().__init__(model_name=os.path.basename(model_path))
         
+        if Llama is None:
+            raise ImportError(
+                "llama_cpp is not installed. Install llama-cpp-python and ensure "
+                "Xcode Command Line Tools are available on macOS."
+            ) from _LLAMA_IMPORT_ERROR
+
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model file not found at {model_path}. Please download it first.")
 

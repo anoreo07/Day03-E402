@@ -37,6 +37,28 @@ DEFAULT_PROVIDER=local
 LOCAL_MODEL_PATH=./models/Phi-3-mini-4k-instruct-q4.gguf
 ```
 
+## 🧠 Running with Ollama (Gemma3)
+
+If you want to use Ollama locally (e.g., `gemma3:4b`), make sure the Ollama app is running:
+
+```bash
+ollama pull gemma3:4b
+ollama serve
+```
+
+Update `.env`:
+```env
+DEFAULT_PROVIDER=ollama
+DEFAULT_MODEL=gemma3:4b
+OLLAMA_BASE_URL=http://localhost:11434
+```
+
+Then run the baseline chatbot or agent:
+```bash
+./.venv/bin/python src/chatbot.py "Find a gift under $50"
+./.venv/bin/python src/run_agent.py "Check stock for P001 and price"
+```
+
 ## 🎯 Lab Objectives
 
 1.  **Baseline Chatbot**: Observe the limitations of a standard LLM when faced with multi-step reasoning.
