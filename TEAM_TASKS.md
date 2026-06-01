@@ -82,7 +82,7 @@ Tài liệu này phân chia công việc rõ ràng cho đội 5 người dựa t
 - [ ] `src/tools/` hoàn chỉnh với specs
 - [ ] `chatbot.py` chạy được với test cases
 - [ ] `src/agent/agent.py` ReAct hoạt động (max 5 loops)
-- [ ] `logs/` có JSON traces
+- [x] `logs/` có JSON traces
 - [ ] `GROUP_REPORT_[TEAM_NAME].md` và `REPORT_[NAME].md` đã hoàn tất
 
 ## Tài liệu tham khảo
