@@ -1,0 +1,21 @@
+﻿product_id,name,category,price_usd,stock_qty,tax_rate,shipping_weight_kg,coupon_code,coupon_discount_pct,coupon_min_order_usd,coupon_free_shipping,coupon_applicable_categories,coupon_expires_at
+P001,Wireless Earbuds,Electronics,49.99,120,0.10,0.05,WELCOME10,10,50,False,All,2026-12-31
+P002,Smartphone Stand,Accessories,15.50,240,0.08,0.12,FREESHIP,0,75,True,All,2026-11-30
+P003,USB-C Fast Charger,Electronics,24.99,180,0.10,0.08,SPRING15,15,120,False,Home|Travel|Fashion,2026-05-31
+P004,Travel Backpack,Travel,69.99,75,0.12,0.75,BUNDLE5,5,30,False,Electronics|Accessories,2026-09-30
+P005,Stainless Steel Water Bottle,Home,22.00,210,0.08,0.35,SUMMER20,20,150,True,Apparel|Fitness,2026-07-31
+P006,LED Desk Lamp,Home,34.50,95,0.08,1.10,NEWUSER25,25,0,False,All,2026-12-31
+P007,Noise-Cancelling Headphones,Electronics,129.90,45,0.10,0.30,GIFT10,10,100,False,Beauty|Home,2026-08-31
+P008,Yoga Mat,Fitness,29.99,160,0.08,1.20,TECH5,5,40,False,Electronics,2026-10-31
+P009,Wireless Mouse,Electronics,19.99,200,0.10,0.10,PET15,15,60,True,Pet,2026-12-31
+P010,Portable Bluetooth Speaker,Electronics,58.00,90,0.10,0.40,FLASH30,30,200,False,Electronics|Fashion,2026-06-15
+P011,Cotton T-Shirt,Fashion,18.00,320,0.12,0.20,FESTIVE12,12,60,False,Fashion,2026-12-25
+P012,Running Shoes,Fashion,89.99,65,0.12,0.90,STEPS10,10,80,False,Fitness,2026-08-15
+P013,Smartwatch Band,Accessories,12.50,150,0.08,0.05,FASHION8,8,50,False,Fashion,2026-11-15
+P014,Kitchen Knife Set,Home,79.99,55,0.08,1.50,HOME15,15,100,False,Home,2026-10-31
+P015,Bamboo Cutting Board,Home,25.00,130,0.08,0.80,CHEF5,5,30,False,Home,2026-12-31
+P016,Organic Face Cream,Beauty,32.00,100,0.10,0.15,BEAUTY10,10,60,False,Beauty,2026-09-30
+P017,Kids Puzzle Toy,Toys,16.99,140,0.08,0.25,PLAY5,5,25,False,Toys,2026-12-31
+P018,Electric Kettle,Home,44.99,70,0.08,1.20,KETTLE10,10,40,False,Home,2026-11-30
+P019,Gaming Keyboard,Electronics,74.99,60,0.10,0.80,GAMER10,10,75,False,Electronics,2026-10-31
+P020,Pet Grooming Brush,Pet,14.99,130,0.08,0.10,PETCARE5,5,20,True,Pet,2026-12-31
