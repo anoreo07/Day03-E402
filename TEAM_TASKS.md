@@ -7,11 +7,11 @@ Tài liệu này phân chia công việc rõ ràng cho đội 5 người dựa t
 - Mục tiêu: Triển khai chatbot baseline và Agent ReAct (v1 → v2), có telemetry (logs JSON), chạy test cases, và nộp báo cáo nhóm + cá nhân.
 
 ## Danh sách thành viên
-- Thành viên A: [Tên A]
-- Thành viên B: [Tên B]
-- Thành viên C: [Tên C]
-- Thành viên D: [Tên D]
-- Thành viên E: [Tên E]
+- Thành viên A: Quang
+- Thành viên B: An
+- Thành viên C: Linh
+- Thành viên D: Đức
+- Thành viên E: Bút
 
 ---
 
@@ -83,7 +83,7 @@ Tài liệu này phân chia công việc rõ ràng cho đội 5 người dựa t
 - [ ] `chatbot.py` chạy được với test cases
 - [ ] `src/agent/agent.py` ReAct hoạt động (max 5 loops)
 - [x] `logs/` có JSON traces
-- [ ] `GROUP_REPORT_[TEAM_NAME].md` và `REPORT_[NAME].md` đã hoàn tất
+- [x] `GROUP_REPORT_[TEAM_NAME].md` và `REPORT_[NAME].md` đã hoàn tất
 
 ## Tài liệu tham khảo
 - Template báo cáo nhóm: [report/group_report/TEMPLATE_GROUP_REPORT.md](report/group_report/TEMPLATE_GROUP_REPORT.md)
