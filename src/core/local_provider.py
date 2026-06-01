@@ -17,8 +17,14 @@ class LocalProvider(LLMProvider):
             n_ctx: Context window size.
             n_threads: Number of CPU threads to use. Defaults to all available.
         """
+        if not model_path:
+            raise FileNotFoundError(
+                "LOCAL_MODEL_PATH is not configured. Set it in .env or choose "
+                "DEFAULT_PROVIDER=openai/gemini."
+            )
+
         super().__init__(model_name=os.path.basename(model_path))
-        
+
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model file not found at {model_path}. Please download it first.")
 
